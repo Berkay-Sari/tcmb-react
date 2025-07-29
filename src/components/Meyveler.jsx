@@ -14,7 +14,7 @@ export default function Meyveler() {
       type: "add",
       payload: {
         isim: yeniMeyve,
-        backColor: "white",
+        backColor: "grey",
         src: "./src/assets/apple.png",
         width: "20px",
         height: 30,

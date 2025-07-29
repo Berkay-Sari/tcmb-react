@@ -49,6 +49,11 @@ const meyvelerReducer = (meyveler, { type, payload }) => {
         return meyve;
       });
     }
+    case "toggleCizili": {
+      return meyveler.map((meyve) =>
+        meyve.id === payload?.id ? { ...meyve, cizili: !meyve.cizili } : meyve
+      );
+    }
   }
 };
 
@@ -56,7 +61,7 @@ function App() {
   const [tumMeyveler, dispatch] = useReducer(meyvelerReducer, [
     {
       id: 0,
-      backColor: "white",
+      backColor: "purple",
       src: "./src/assets/apple.png",
       width: "20px",
       height: 30,
@@ -76,7 +81,7 @@ function App() {
     },
     {
       id: 2,
-      backColor: "red",
+      backColor: "blue",
       src: "./src/assets/banana.png",
       width: "20px",
       height: 30,

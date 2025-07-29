@@ -1,14 +1,21 @@
-import React from "react";
+import { useContext } from "react";
+import { DispatchContext } from "./DispatchContext";
+
 function Meyve({ meyve, handleDelete }) {
-  const deleteMeyve = (meyveId) => {
-    handleDelete(meyveId);
+  const dispatch = useContext(DispatchContext);
+
+  const toggleCizili = () => {
+    dispatch({ type: "toggleCizili", payload: { id: meyve.id } });
   };
+
   const { width, height, src, cizili, backColor } = meyve;
   const comp = (
     <li
+      onClick={toggleCizili}
       style={{
         backgroundColor: backColor,
         fontSize: 20,
+        cursor: "pointer",
       }}
     >
       <img
@@ -22,7 +29,14 @@ function Meyve({ meyve, handleDelete }) {
         }}
       />
       {meyve.isim}
-      <div onClick={() => deleteMeyve(meyve.id)}>X</div>
+      <div
+        onClick={(e) => {
+          e.stopPropagation();
+          handleDelete(meyve.id);
+        }}
+      >
+        X
+      </div>
     </li>
   );
 
