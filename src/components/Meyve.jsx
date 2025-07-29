@@ -1,14 +1,23 @@
-import { useContext } from "react";
-import { DispatchContext } from "./DispatchContext";
+import React, { useContext } from "react";
+import {
+  TumMeyvelerContext,
+  SetTumMeyvelerContext,
+} from "./TumMeyvelerContext";
 
 function Meyve({ meyve, handleDelete }) {
-  const dispatch = useContext(DispatchContext);
+  const tumMeyveler = useContext(TumMeyvelerContext);
+  const setTumMeyveler = useContext(SetTumMeyvelerContext);
 
   const toggleCizili = () => {
-    dispatch({ type: "toggleCizili", payload: { id: meyve.id } });
+    setTumMeyveler(
+      tumMeyveler.map((m) =>
+        m.id === meyve.id ? { ...m, cizili: !m.cizili } : m
+      )
+    );
   };
 
   const { width, height, src, cizili, backColor } = meyve;
+
   const comp = (
     <li
       onClick={toggleCizili}
