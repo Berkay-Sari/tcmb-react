@@ -1,47 +1,44 @@
 import Meyve from "./Meyve";
-import { useContext, useRef, useState } from "react";
-import { TumMeyvelerContext } from "./TumMeyvelerContext";
-import { DispatchContext } from "./DispatchContext";
+import { useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { addMeyve, editMeyve, selectVisibleMeyveler } from "../meyvelerslice";
 
 export default function Meyveler() {
-  const tumMeyveler = useContext(TumMeyvelerContext);
-  const dispatch = useContext(DispatchContext);
+  const meyveler = useSelector(selectVisibleMeyveler);
+  const dispatch = useDispatch();
 
   const handleEkle = (e) => {
     e.stopPropagation();
     e.preventDefault();
-    dispatch({
-      type: "add",
-      payload: {
+    dispatch(
+      addMeyve({
         isim: yeniMeyve,
-        backColor: "white",
+        backColor: "grey",
         src: "./src/assets/apple.png",
         width: "20px",
         height: 30,
         cizili: false,
         gizli: false,
-      },
-    }),
-      setYeniMeyve("");
+      })
+    );
+    setYeniMeyve("");
   };
 
   const handleEdit = (e) => {
     e.preventDefault();
-    dispatch({
-      type: "edit",
-      payload: {
+    dispatch(
+      editMeyve({
         id: selected,
         yeniMeyve,
-      },
-    });
+      })
+    );
+    setYeniMeyve("");
   };
 
   const [yeniMeyve, setYeniMeyve] = useState("");
   const [selected, setSelected] = useState("");
 
   const inputRef = useRef(null);
-
-  const meyveler = tumMeyveler.filter((item) => !item.gizli);
 
   return (
     <ol className="liste">
