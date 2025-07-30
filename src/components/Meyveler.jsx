@@ -1,70 +1,82 @@
 import Meyve from "./Meyve";
-import { useContext, useState } from "react";
-import {
-  TumMeyvelerContext,
-  SetTumMeyvelerContext,
-} from "./TumMeyvelerContext";
+import { useContext, useRef, useState } from "react";
+import { TumMeyvelerContext } from "./TumMeyvelerContext";
+import { DispatchContext } from "./DispatchContext";
 
 export default function Meyveler() {
   const tumMeyveler = useContext(TumMeyvelerContext);
-  const setTumMeyveler = useContext(SetTumMeyvelerContext);
+  const dispatch = useContext(DispatchContext);
 
   const handleEkle = (e) => {
+    e.stopPropagation();
     e.preventDefault();
-    const yeniMeyveObj = {
-      id: Math.max(...tumMeyveler.map((m) => m.id), 0) + 1,
-      isim: yeniMeyve,
-      backColor: "gray",
-      src: "./src/assets/apple.png",
-      width: "20px",
-      height: 30,
-      cizili: false,
-      gizli: false,
-    };
-    setTumMeyveler([...tumMeyveler, yeniMeyveObj]);
-    setYeniMeyve("");
+    dispatch({
+      type: "add",
+      payload: {
+        isim: yeniMeyve,
+        backColor: "white",
+        src: "./src/assets/apple.png",
+        width: "20px",
+        height: 30,
+        cizili: false,
+        gizli: false,
+      },
+    }),
+      setYeniMeyve("");
   };
 
   const handleEdit = (e) => {
     e.preventDefault();
-    setTumMeyveler(
-      tumMeyveler.map((meyve) =>
-        meyve.id === selected ? { ...meyve, isim: yeniMeyve } : meyve
-      )
-    );
-    setYeniMeyve("");
-  };
-
-  const handleDelete = (id) => {
-    setTumMeyveler(tumMeyveler.filter((meyve) => meyve.id !== id));
+    dispatch({
+      type: "edit",
+      payload: {
+        id: selected,
+        yeniMeyve,
+      },
+    });
   };
 
   const [yeniMeyve, setYeniMeyve] = useState("");
-  const [selected, setSelected] = useState(null);
+  const [selected, setSelected] = useState("");
+
+  const inputRef = useRef(null);
 
   const meyveler = tumMeyveler.filter((item) => !item.gizli);
 
   return (
     <ol className="liste">
       {meyveler.map((item) => (
-        <div key={item.id}>
+        <>
           <input
             type="radio"
-            checked={selected === item.id}
-            onChange={() => setSelected(item.id)}
+            value={selected}
+            onClick={() => setSelected(item.id)}
             name="abc"
           />
-          <Meyve meyve={item} handleDelete={handleDelete} />
-        </div>
+          <Meyve meyve={item} key={item.id} />
+        </>
       ))}
+      <button
+        onClick={() => {
+          inputRef.current.focus();
+        }}
+      >
+        Focus
+      </button>
+
       <form>
         <input
+          ref={inputRef}
           label="Eklenecek"
           value={yeniMeyve}
           onChange={(e) => setYeniMeyve(e.target.value)}
         />
-        <button onClick={handleEkle}>Ekle</button>
-        <button onClick={handleEdit}>Edit</button>
+        <button type="submit" onClick={handleEkle}>
+          Ekle
+        </button>
+        <button type="submit" onClick={handleEdit}>
+          Edit
+        </button>
       </form>
     </ol>
   );

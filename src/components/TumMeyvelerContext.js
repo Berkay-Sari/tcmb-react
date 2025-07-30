@@ -1,4 +1,3 @@
 import { createContext } from "react";
 
-export const TumMeyvelerContext = createContext([]);
-export const SetTumMeyvelerContext = createContext(null);
+export const TumMeyvelerContext = createContext(null);

@@ -1,30 +1,27 @@
 import React, { useContext } from "react";
-import {
-  TumMeyvelerContext,
-  SetTumMeyvelerContext,
-} from "./TumMeyvelerContext";
+import { DispatchContext } from "./DispatchContext";
+function Meyve({ meyve }) {
+  const dispatch = useContext(DispatchContext);
+  const deleteMeyve = (id) => {
+    dispatch({ type: "delete", payload: { id } });
+  };
 
-function Meyve({ meyve, handleDelete }) {
-  const tumMeyveler = useContext(TumMeyvelerContext);
-  const setTumMeyveler = useContext(SetTumMeyvelerContext);
-
-  const toggleCizili = () => {
-    setTumMeyveler(
-      tumMeyveler.map((m) =>
-        m.id === meyve.id ? { ...m, cizili: !m.cizili } : m
-      )
-    );
+  const handleCiz = (id, cizili) => {
+    dispatch({
+      type: "ciz",
+      payload: {
+        id,
+        cizili,
+      },
+    });
   };
 
   const { width, height, src, cizili, backColor } = meyve;
-
   const comp = (
     <li
-      onClick={toggleCizili}
       style={{
         backgroundColor: backColor,
         fontSize: 20,
-        cursor: "pointer",
       }}
     >
       <img
@@ -37,15 +34,8 @@ function Meyve({ meyve, handleDelete }) {
           borderStyle: "solid",
         }}
       />
-      {meyve.isim}
-      <div
-        onClick={(e) => {
-          e.stopPropagation();
-          handleDelete(meyve.id);
-        }}
-      >
-        X
-      </div>
+      <div onClick={() => handleCiz(meyve.id, !meyve.cizili)}>{meyve.isim}</div>
+      <div onClick={() => deleteMeyve(meyve.id)}>X</div>
     </li>
   );
 
